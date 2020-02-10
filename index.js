@@ -21,9 +21,17 @@ const ops = stdio.getopt({
   },
 });
 
+const log = () => {
+  return function reqLog (req, res, next) {
+    console.log(`☠ ${ops.dest}${req.url}`);
+    next();
+  }
+}
+
 proxy
   .forward(ops.dest)
   .all('/*')
+  .poison(log())
   .poison(poisons.latency({ jitter: ops.latency }));
 
 proxy.listen(ops.port);
