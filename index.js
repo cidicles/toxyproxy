@@ -1,4 +1,5 @@
 const toxy = require('toxy');
+const rules = toxy.rules;
 const poisons = toxy.poisons;
 const proxy = toxy();
 const stdio = require('stdio');
@@ -31,6 +32,7 @@ const log = () => {
 proxy
   .forward(ops.dest)
   .all('/*')
+  .withRule(rules.method(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'UPDATE']))
   .poison(log())
   .poison(poisons.latency({ jitter: ops.latency }));
 
